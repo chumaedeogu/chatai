@@ -15,6 +15,7 @@ pipeline {
         stage ("SonarQube analysis") {
             steps {
                 withSonarQubeEnv('sonar-server') {
+                    echo 'Running SonarQube analysis'
                     sh '$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=aichatapp -Dsonar.projectName=aichatapp'
                 }
             }
