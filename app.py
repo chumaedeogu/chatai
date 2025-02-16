@@ -4,6 +4,8 @@ import google.generativeai as gemini
 from groq import Groq
 import os
 from dotenv import load_dotenv
+import requests as r
+import json
 
 # Load environment variables from .env file
 load_dotenv()
@@ -32,12 +34,32 @@ def get_ai_response(prompt, model):
             return response.result
         elif model == "Groq AI":
             client = Groq()
-            response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=[{"role": "user", "content": prompt}],
+            print(client)
+            headers = {
+                "Authorization": f"Bearer {GROQ_API_KEY}",
+                "Content-Type": "application/json",
+            }
+            payload = {
+                "model": "mixtral-8x7b-32768",
+                "messages": [{"role": "user", "content": prompt}],
+                "max_tokens": 500,
+            }
+            response = r.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers=headers,
+                data = json.dumps(payload)
             )
-            print(response['choices'])
-            return response["choices"][0].message.content
+            print(response.json())
+            if response.status_code != 200:
+                return f"Error: {response.text}"
+            else:
+                return response.json()["choices"][0]["message"]["content"]
+            # response = client.chat.completions.create(
+            #     model="mixtral-8x7b-32768",
+            #     messages=[{"role": "user", "content": prompt}],
+            # )
+            # print(response['choices'])
+            # return response["choices"][0].message.content
     except Exception as e:
         return f"Error: {str(e)}"
 
@@ -76,7 +98,7 @@ if user_input:
     
     st.session_state.messages.append({"role": "assistant", "content": response})
     with st.chat_message("assistant"):
-        st.markdown(f"**{selected_model} AI:** {response}")
+        st.markdown(f"**{selected_model}:** {response}")
         st.markdown("---")
 
 # Add a clear chat button with confirmation
