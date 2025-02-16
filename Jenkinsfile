@@ -3,6 +3,7 @@ pipeline {
 
    environment {
        SCANNER_HOME = tool 'sonar-scanner'
+       DOCKERHUB_CREDENTIALS = credentials('5f8b634a-148a-4067-b996-07b4b3276fba')
    }
 
    stages {
@@ -33,6 +34,28 @@ pipeline {
                     }
                 }
             }
+        }
+
+        stage ("Terraform Apply") {
+            steps {
+                dir('terraform') {
+                    sh 'terraform init'
+                    sh 'terraform apply -auto-approve'
+                    def imageTag = sh(script: "terraform output -raw docker_image_name", returnStdout: true).trim()
+                    env.IMAGE_NAME = imageTag
+                }
+            }
+        }
+
+        stage ("Trivy Image Scan") {
+            steps {
+                sh "trivy image --exit-code 0 --severity HIGH --no-progress ${env.IMAGE_NAME}"
+            }
+        }
+
+        stage ("Docker Push") {
+            sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+            sh "docker push ${env.IMAGE_NAME}"
         }
    } 
 }
