@@ -112,5 +112,26 @@ pipeline {
                 sh "docker push ${env.IMAGE_NAME}"
             }
         }
+
+        stage ("Update Deployment Image") {
+            steps {
+                script {
+                    sh "sed -i 's|image:.*|image: ${env.IMAGE_NAME}|' k8s/deploy.yaml"
+                    sh "git add ."
+                    sh "git commit -m 'Update deployment image with commit ${env.BUILD_NUMBER}'"
+                }
+            }
+        }
+
+        stage ("Push to Git") {
+            steps {
+                withCredentials([string(credentialsId: '0b1954cc-dc9f-4621-9f68-b763ee088e6b', variable: 'GIT_CREDENTIALS')]) {
+                    sh "git config --global user.email 'idrisniyi94@gmail.com'"
+                    sh "git config --global user.name 'Idris Fagbemi'"
+                    sh "git remote set-url origin https://$GIT_CREDENTIALS/stwins60/chatai.git"
+                    sh "git push origin master"
+                }
+            }
+        }
    } 
 }
