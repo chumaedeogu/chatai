@@ -4,6 +4,8 @@ pipeline {
    environment {
        SCANNER_HOME = tool 'sonar-scanner'
        DOCKERHUB_CREDENTIALS = credentials('5f8b634a-148a-4067-b996-07b4b3276fba')
+       SLACK_WEBHOOK = credentials('191d1ac7-9f11-4626-8bdc-a3a78fcbf8c1')
+       BRANCH_NAME = "${GIT_BRANCH.split('/')[1]}"
    }
 
    stages {
@@ -29,6 +31,42 @@ pipeline {
                         echo 'Checking Quality Gate'
                         def qg = waitForQualityGate()
                         if (qg.status != 'OK') {
+                            SLACK_MESSAGE=$(cat <<EOF
+                            {
+                                "channel": "#jenkins",
+                                "text": "🚨 Sonarqube Quality Gate failed",
+                                "blocks": [
+                                    {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "mrkdwn",
+                                            "text": "🚨 *Sonarqube Quality Gate failed*"
+                                        }
+                                    },
+                                    {
+                                        "type": "section",
+                                        "fields": [
+                                            {
+                                                "type": "mrkdwn",
+                                                "text": "*Project:* ${JOB_NAME}"
+                                            },
+                                            {
+                                                "type": "mrkdwn",
+                                                "text": "*Branch:* ${BRANCH_NAME}"
+                                            },
+                                            {
+                                                "type": "mrkdwn",
+                                                "text": "*Status:* ${qg.status}"
+                                            },
+                                            {
+                                                "type": "mrkdwn",
+                                                "text": "*Link:* ${qg.url}"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            })
+                            curl -X POST -H 'Content-type: application/json' --data "$SLACK_MESSAGE" $SLACK_WEBHOOK
                             error "Pipeline aborted due to quality gate failure: ${qg.status}"
                         }
                     }
