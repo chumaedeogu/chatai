@@ -127,12 +127,17 @@ pipeline {
 
         stage ("Push to Git") {
             steps {
-                withCredentials([string(credentialsId: '0b1954cc-dc9f-4621-9f68-b763ee088e6b', variable: 'GIT_CREDENTIALS')]) {
-                    sh "git config --global user.email 'idrisniyi94@gmail.com'"
-                    sh "git config --global user.name 'Idris Fagbemi'"
-                    sh "git remote set-url origin https://$GIT_CREDENTIALS/stwins60/chatai.git"
+                withCredentials([
+                    gitUsernamePassword(credentialsId: '66232a95-f76c-4a71-9e0b-f964383e3c50', gitToolName: 'Default')
+                ]) {
                     sh "git push origin master"
                 }
+                // withCredentials([string(credentialsId: '66232a95-f76c-4a71-9e0b-f964383e3c50', variable: 'GIT_CREDENTIALS')]) {
+                //     sh "git config --global user.email 'idrisniyi94@gmail.com'"
+                //     sh "git config --global user.name 'Idris Fagbemi'"
+                //     sh "git remote set-url origin https://$GIT_CREDENTIALS/stwins60/chatai.git"
+                //     sh "git push origin master"
+                // }
             }
         }
    } 
