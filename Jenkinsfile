@@ -31,7 +31,7 @@ pipeline {
                         echo 'Checking Quality Gate'
                         def qg = waitForQualityGate()
                         if (qg.status != 'OK') {
-                            SLACK_MESSAGE=$(cat <<EOF
+                            def slackMessage = """
                             {
                                 "channel": "#jenkins",
                                 "text": "🚨 Sonarqube Quality Gate failed",
@@ -48,11 +48,11 @@ pipeline {
                                         "fields": [
                                             {
                                                 "type": "mrkdwn",
-                                                "text": "*Project:* ${JOB_NAME}"
+                                                "text": "*Project:* ${env.JOB_NAME}"
                                             },
                                             {
                                                 "type": "mrkdwn",
-                                                "text": "*Branch:* ${BRANCH_NAME}"
+                                                "text": "*Branch:* ${env.BRANCH_NAME}"
                                             },
                                             {
                                                 "type": "mrkdwn",
@@ -66,9 +66,12 @@ pipeline {
                                     }
                                 ]
                             }
-                            EOF
-                            )
-                            curl -X POST -H 'Content-type: application/json' --data "$SLACK_MESSAGE" $SLACK_WEBHOOK
+                            """.trim()
+
+                            sh """
+                            curl -X POST -H 'Content-type: application/json' --data '${slackMessage.replaceAll("'", "\\'")}' ${env.SLACK_WEBHOOK}
+                            """
+
                             error "Pipeline aborted due to quality gate failure: ${qg.status}"
                         }
                     }
