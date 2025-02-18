@@ -7,7 +7,12 @@ spec:
   selector:
     app: chataiapp
   ports:
-  - port: 8501
+  - name: http1
+    port: 8501
     targetPort: 8501
     nodePort: 30001
+  - name: http2
+    port: 8502
+    targetPort: 8502
+    nodePort: 30002
   type: NodePort
