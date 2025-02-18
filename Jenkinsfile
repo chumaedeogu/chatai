@@ -116,6 +116,8 @@ pipeline {
         stage ("Update Deployment Image") {
             steps {
                 script {
+                    sh "git config --global user.email 'idrisniyi94@gmail.com'"
+                    sh "git config --global user.name 'Idris Fagbemi'"
                     sh "sed -i 's|image:.*|image: ${env.IMAGE_NAME}|' k8s/deploy.yaml"
                     sh "git add ."
                     sh "git commit -m 'Update deployment image with commit ${env.BUILD_NUMBER}'"
