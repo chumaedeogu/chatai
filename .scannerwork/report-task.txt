@@ -2,5 +2,5 @@ projectKey=aichatapp
 serverUrl=https://sonarqube.africantech.dev
 serverVersion=25.2.0.102705
 dashboardUrl=https://sonarqube.africantech.dev/dashboard?id=aichatapp
-ceTaskId=daf79043-24e1-4569-9786-182b2d034be2
-ceTaskUrl=https://sonarqube.africantech.dev/api/ce/task?id=daf79043-24e1-4569-9786-182b2d034be2
+ceTaskId=30e7ab7e-3427-4c33-b669-f52d4490fb63
+ceTaskUrl=https://sonarqube.africantech.dev/api/ce/task?id=30e7ab7e-3427-4c33-b669-f52d4490fb63
