@@ -6,7 +6,7 @@ pipeline {
        DOCKERHUB_CREDENTIALS = credentials('5f8b634a-148a-4067-b996-07b4b3276fba')
        SLACK_WEBHOOK = credentials('191d1ac7-9f11-4626-8bdc-a3a78fcbf8c1')
        BRANCH_NAME = "${GIT_BRANCH.split('/')[1]}"
-       IMAGE_NAME = "idrisniyi94/aihatapp"
+       IMAGE_REPO = "idrisniyi94/aihatapp"
    }
 
    stages {
@@ -89,7 +89,7 @@ pipeline {
             steps {
                 dir('terraform') {
                     sh 'terraform init'
-                    sh "terraform apply -var image_tag=${env.BUILD_NUMBER} -var author=${env.BUILD_USER} -var image_name=${env.IMAGE_NAME} -auto-approve"
+                    sh "terraform apply -var image_tag=${env.BUILD_NUMBER} -var author=${env.BUILD_USER} -var image_name=${env.IMAGE_REPO} -auto-approve"
                     
                     script {
                         def imageTag = sh(script: "terraform output -raw docker_image_name", returnStdout: true).trim()
