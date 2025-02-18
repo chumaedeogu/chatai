@@ -65,7 +65,9 @@ pipeline {
                                         ]
                                     }
                                 ]
-                            })
+                            }
+                            EOF
+                            )
                             curl -X POST -H 'Content-type: application/json' --data "$SLACK_MESSAGE" $SLACK_WEBHOOK
                             error "Pipeline aborted due to quality gate failure: ${qg.status}"
                         }
