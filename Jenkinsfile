@@ -88,7 +88,7 @@ pipeline {
             steps {
                 dir('terraform') {
                     sh 'terraform init'
-                    sh 'terraform apply -var image_tag=${env.BUILD_NUMBER} -auto-approve'
+                    sh "terraform apply -var image_tag=${env.BUILD_NUMBER} -auto-approve"
                     
                     script {
                         def imageTag = sh(script: "terraform output -raw docker_image_name", returnStdout: true).trim()
