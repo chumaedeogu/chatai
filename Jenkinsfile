@@ -66,11 +66,16 @@ pipeline {
                                     }
                                 ]
                             }
-                            """.trim()
-
-                            sh """
-                            curl -X POST -H 'Content-type: application/json' --data '${slackMessage.replaceAll("'", "\\'")}' ${env.SLACK_WEBHOOK}
                             """
+
+                            echo "Sending Slack notification..."
+                            
+                            def response = sh(script: """
+                                curl -X POST -H 'Content-type: application/json' \\
+                                --data '${slackMessage.replace("\n", "")}' ${env.SLACK_WEBHOOK}
+                            """, returnStdout: true).trim()
+                            
+                            echo "Slack Response: ${response}"
 
                             error "Pipeline aborted due to quality gate failure: ${qg.status}"
                         }
