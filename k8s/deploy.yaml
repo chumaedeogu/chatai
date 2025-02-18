@@ -25,3 +25,4 @@ spec:
             cpu: "250m"
         ports:
         - containerPort: 8501
+        - containerPort: 8502
