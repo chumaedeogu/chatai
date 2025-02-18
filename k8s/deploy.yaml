@@ -12,6 +12,7 @@ spec:
       labels:
         app: chataiapp
     spec:
+      automountServiceAccountToken: false
       containers:
       - name: chataiapp
         image: IMAGE_NAME
@@ -19,5 +20,8 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "500m"
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
         ports:
         - containerPort: 8501
