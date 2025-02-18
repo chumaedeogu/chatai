@@ -15,7 +15,7 @@ spec:
       automountServiceAccountToken: false
       containers:
       - name: chataiapp
-        image: IMAGE_NAME
+        image: IMAGE_NAME:stable
         resources:
           limits:
             memory: "128Mi"
