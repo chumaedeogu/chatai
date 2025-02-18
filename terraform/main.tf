@@ -1,13 +1,8 @@
-resource "random_integer" "this" {
-  min = 1
-  max = 1000
-}
-
 resource "docker_image" "this" {
   name = var.image_name
   build {
     context = "../"
-    tag    = ["${var.image_name}:v-0.${random_integer.this.result}"]
+    tag    = ["${var.image_name}:v-0.${var.image_tag}"]
     label = {
       author : var.author
     }
