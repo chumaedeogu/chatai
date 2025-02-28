@@ -5,11 +5,7 @@ pipeline{
        SONAR_HOME = tool('sonar-scanner')
     }
     stages{
-        stage("checkout"){
-            steps{
-                git branch: "main", url: "https://github.com/chumaedeogu/chatai.git"
-            }
-        }
+        
         stage("static code analysis"){
             steps{
                 withSonarQubeEnv('sonar-scanner') {
