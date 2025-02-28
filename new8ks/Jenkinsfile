@@ -21,6 +21,7 @@ pipeline{
                     '''
             }
         }
+        }
         stage("wait for quality gate"){
             steps{
                 script{
@@ -38,6 +39,7 @@ pipeline{
            steps {
         dependencyCheck additionalArguments: '-f table -o reports/ -s src/', odcInstallation: 'owasp'
              }
+        }
 
 
     }
