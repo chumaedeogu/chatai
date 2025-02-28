@@ -4,7 +4,7 @@ pipeline{
         owaspDependencyCheck 'owasp'
     }
     environment{
-        sonar-scanner = tool('sonar-scanner')
+       def  sonar-scanner = tool('sonar-scanner')
     }
     stages{
         stage("checkout"){
