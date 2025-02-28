@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chait
+  labels:
+     app: front
+spec:
+  replicas: 3
+  selector:
+     matchLabels:
+      dev: test
+  template:
+    metadata:
+      labels:
+        dev: test
+    spec:   
+     containers:
+      - name: cont
+        image: chumaedeogu/connect
+        ports:
+        - containerPort: 1991
+        resources:
+          requests:
+             cpu: "1"
+             memory: "2"
+          limits:
+            cpu: "2"
+            memory: "2"

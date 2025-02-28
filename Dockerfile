@@ -1,24 +1,28 @@
-# === Stage 1: Builder ===
-FROM public.ecr.aws/docker/library/python:3.13-slim AS builder
+# Use the slim Python base image
+FROM python:3.13-slim
 
+# Set the working directory
 WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt .
-RUN apt update && apt install -y python3-pip && \
-    pip install --no-cache-dir -r requirements.txt --target /dependencies
+# Create a new user and give ownership of /app
+RUN useradd -m -s /bin/bash dockeruser && chown -R dockeruser:dockeruser /app
 
-# === Stage 2: Final Image ===
-FROM public.ecr.aws/docker/library/python:3.13-slim
+# Switch to the new user
+USER dockeruser
 
-WORKDIR /app
+# Add ~/.local/bin to PATH
+ENV PATH="/home/dockeruser/.local/bin:$PATH"
 
-# Copy dependencies from builder stage
-COPY --from=builder /dependencies /usr/local/lib/python3.13/site-packages
+# Copy requirements file and install dependencies
+COPY --chown=dockeruser:dockeruser requirements.txt .
+RUN pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir
 
 # Copy application files
-COPY app.py .
+COPY --chown=dockeruser:dockeruser app.py .
 
+# Expose required ports
 EXPOSE 8501
+EXPOSE 8502
 
+# Run Streamlit app
 ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
