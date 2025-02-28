@@ -1,8 +1,6 @@
 pipeline{
     agent any
-    tools {
-        owaspDependencyCheck 'owasp'
-    }
+   
     environment{
        SONAR_HOME = tool('sonar-scanner')
     }
@@ -14,7 +12,7 @@ pipeline{
         }
         stage("static code analysis"){
             steps{
-                withSonarQubeEnv(credentialsId: 'sonarqube') {
+                withSonarQubeEnv('sonar-scanner') {
                     bat '''
                     sonar-scanner -Dsonar.projectName = "chatai" ^
                     -Dsoanr.projectKey = "chatai"
