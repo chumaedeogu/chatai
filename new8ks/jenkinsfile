@@ -1,0 +1,45 @@
+pipeline{
+    agent any
+    tools {
+        owaspDependencyCheck 'owasp'
+    }
+    environment{
+        sonar-scanner = tool('sonar-scanner')
+    }
+    stages{
+        stage("checkout"){
+            steps{
+                git branch: "main", url: "https://github.com/chumaedeogu/chatai.git"
+            }
+        }
+        stage("static code analysis"){
+            steps{
+                withSonarQubeEnv(credentialsId: 'sonarqube') {
+                    bat '''
+                    sonar-scanner -Dsonar.projectName = "chatai" ^
+                    -Dsoanr.projectKey = "chatai"
+                    '''
+            }
+        }
+        stage("wait for quality gate"){
+            steps{
+                script{
+                    def qd = waitForQualityGate(abortpipeline: false,credentialsId: 'sonarqube' ){
+                        if (qd.status != 'ok'){
+                            echo " the pile has failed based ${qd.status}"
+                        }
+                    }
+
+                }
+            }
+           
+        }
+        stage("Dependency checks") {
+           steps {
+        dependencyCheck additionalArguments: '-f table -o reports/ -s src/', odcInstallation: 'owasp'
+             }
+
+
+    }
+    
+}

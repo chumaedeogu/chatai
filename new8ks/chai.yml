@@ -16,13 +16,7 @@ spec:
     spec:   
      containers:
       - name: cont
-        image: chumaedeogu/connect
+        image: chumaedeogu/peter
         ports:
         - containerPort: 1991
-        resources:
-          requests:
-             cpu: "1"
-             memory: "2"
-          limits:
-            cpu: "2"
-            memory: "2"
+        

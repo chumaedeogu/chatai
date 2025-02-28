@@ -4,3 +4,4 @@ venv
 **/terraform.tfstate.backup
 **/.terraform
 **/.terraform.lock.hcl
+./minikube-linux-amd64minikube-linux-amd64
