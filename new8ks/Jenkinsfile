@@ -31,7 +31,7 @@ pipeline {
 
         stage("Dependency Checks") {
             steps {
-                dependencyCheck additionalArguments: '-f table -o reports/ -s .', odcInstallation: 'owasp'
+                dependencyCheck additionalArguments: '-f  HTML -o reports/ -s .', odcInstallation: 'owasp'
             }
         }
     }
