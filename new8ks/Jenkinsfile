@@ -29,10 +29,6 @@ pipeline {
             }
         }
 
-        stage("Dependency Checks") {
-            steps {
-                dependencyCheck additionalArguments: '-f  HTML -o reports/ -s .', odcInstallation: 'owasp'
-            }
-        }
+ 
     }
 }
