@@ -1,41 +1,38 @@
-pipeline{
+pipeline {
     agent any
-   
-    environment{
-       SONAR_HOME = tool('sonar-scanner')
-    }
-    stages{
-        
-        stage("static code analysis"){
-            steps{
-                withSonarQubeEnv('sonar-scanner') {
-                
-            }
-        }
-        }
-        stage("wait for quality gate"){
-            steps{
-                script{
-                    def qd = waitForQualityGate(abortpipeline: false,credentialsId: 'sonarqube' ){
-                        if (qd.status != 'ok'){
-                            echo " the pile has failed based ${qd.status}"
-                        }
-                    }
 
+    environment {
+        SONAR_HOME = tool('sonar-scanner')
+    }
+
+    stages {
+        stage("Static Code Analysis") {
+            steps {
+                withSonarQubeEnv('sonarqube') {  // Ensure 'sonarqube' matches Jenkins config
+                    bat """
+                        "%SONAR_HOME%\\bin\\sonar-scanner" ^
+                        -Dsonar.projectName="chatai" ^
+                        -Dsonar.projectKey="chatai"
+                    """
                 }
             }
-           
-        }
-        stage("Dependency checks") {
-           steps {
-        dependencyCheck additionalArguments: '-f table -o reports/ -s src/', odcInstallation: 'owasp'
-             }
         }
 
+        stage("Wait for Quality Gate") {
+            steps {
+                script {
+                    def qg = waitForQualityGate(abortPipeline: true)
+                    if (qg.status != 'OK') {
+                        error "Pipeline failed due to Quality Gate status: ${qg.status}"
+                    }
+                }
+            }
+        }
 
+        stage("Dependency Checks") {
+            steps {
+                dependencyCheck additionalArguments: '-f table -o reports/ -s src/', odcInstallation: 'owasp'
+            }
+        }
     }
-    
-}    bat '''
-                     %SONAR_HOME%  -Dsonar.projectName = "chatai" ^
-                    -Dsoanr.projectKey = "chatai"
-                    '''
+}
