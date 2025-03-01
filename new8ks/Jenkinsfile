@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage("Static Code Analysis") {
             steps {
-                withSonarQubeEnv('sonarqube') {  // Ensure 'sonarqube' matches Jenkins config
+                withSonarQubeEnv('sonar-scanner') {  // Ensure 'sonarqube' matches Jenkins config
                     bat """
                         "%SONAR_HOME%\\bin\\sonar-scanner" ^
                         -Dsonar.projectName="chatai" ^
