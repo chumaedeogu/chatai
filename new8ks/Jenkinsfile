@@ -28,6 +28,11 @@ pipeline {
                 }
             }
         }
+        stage("buiid the image"){
+            steps{
+                bat "docker build -t peter:${build_number} "
+            }
+        }
 
  
     }
