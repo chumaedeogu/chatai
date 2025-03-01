@@ -9,10 +9,7 @@ pipeline{
         stage("static code analysis"){
             steps{
                 withSonarQubeEnv('sonar-scanner') {
-                    bat '''
-                    sonar-scanner -Dsonar.projectName = "chatai" ^
-                    -Dsoanr.projectKey = "chatai"
-                    '''
+                
             }
         }
         }
@@ -38,4 +35,7 @@ pipeline{
 
     }
     
-}
+}    bat '''
+                     %SONAR_HOME%  -Dsonar.projectName = "chatai" ^
+                    -Dsoanr.projectKey = "chatai"
+                    '''
