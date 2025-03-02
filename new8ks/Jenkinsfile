@@ -30,7 +30,7 @@ pipeline {
         }
         stage("buiid the image"){
             steps{
-                bat "docker build -t peter:${build_number} ."
+                bat "docker build -t peter:${BUILD_NUMBER} ."
             }
         }
         stage("update the image number"){
@@ -44,6 +44,18 @@ pipeline {
                 }
             }
         }
+        stage('Update Image') {
+            steps {
+                script {
+                    // Define the new image
+                    // Update the image in the deployment.yaml file
+                    sh """
+                        sed -i 's|image: .*|image: chumaedeogu/peter:${BUILD_NUMBER}|g' new8ks/chai.yml
+                     """
+                }
+            }
+        }
+
 
  
     }
