@@ -33,6 +33,16 @@ pipeline {
                 bat "docker build -t peter:${build_number} ."
             }
         }
+        stage(update the image number){
+            steps{
+                script{
+                    bat '''
+                    "C:\\Program Files\\Git\\git-bash.exe" --cd-to-home "/home/chuma/projects/chatai/new8ks/updatedep.sh"
+
+                    '''
+                }
+            }
+        }
 
  
     }
