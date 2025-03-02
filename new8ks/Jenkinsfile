@@ -39,9 +39,9 @@ pipeline {
                 script {
                     // Define the new image
                     // Update the image in the deployment.yaml file
-                    bat """
-                        sed -i 's|image: .*|image: chumaedeogu/peter:${BUILD_NUMBER}|g' new8ks/chai.yml
-                     """
+                    powershell """
+                (Get-Content new8ks/chai.yml) -replace 'image: .*', 'image: chumaedeogu/peter:${BUILD_NUMBER}' | Set-Content new8ks/chai.yml
+                        """
                 }
             }
         }
