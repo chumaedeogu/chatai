@@ -39,7 +39,7 @@ pipeline {
                 script {
                     // Define the new image
                     // Update the image in the deployment.yaml file
-                    sh """
+                    bat """
                         sed -i 's|image: .*|image: chumaedeogu/peter:${BUILD_NUMBER}|g' new8ks/chai.yml
                      """
                 }
