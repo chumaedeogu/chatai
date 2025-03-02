@@ -1,7 +1,6 @@
 #!/bin/bash
 set -x
 
-# Set the build number from Jenkins, or use "latest" as a fallback
 number=${BUILD_NUMBER:-latest}  
 URL=https://github.com/chumaedeogu/chatai.git
 
