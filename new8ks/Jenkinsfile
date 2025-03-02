@@ -38,7 +38,7 @@ pipeline {
                 script{
                     bat '''
 
-                    "C:\\Program Files\\Git\\git-bash.exe" --cd-to-home "/home/chuma/projects/chatai/new8ks/updatedep.sh"
+                    "C:\\Program Files\\Git\\git-bash.exe" --cd-to-home "/home/chuma/projects/chatai/new8ks/update.sh"
 
                     '''
                 }
